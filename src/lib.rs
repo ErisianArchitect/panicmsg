@@ -2,11 +2,11 @@
 //! panics, assertions (`assert`, `assert_eq`, `assert_ne`), and `expect`.
 //! It also includes debug versions of each of these methods.
 //! 
-//! Simply declare a [PanicMsg] in your code:
+//! Simply declare a [PanicMsg]:
 //! ```rust, no_run
 //! const EXAMPLE_PANIC: PanicMsg = PanicMsg::new("This is an example panic message.");
 //! ```
-//! Then you can use it like this:
+//! Then use it like this:
 //! ```rust, no_run
 // ...
 //! EXAMPLE_PANIC.panic();

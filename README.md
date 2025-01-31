@@ -1,8 +1,8 @@
-This crate provides reusable error messages ([PanicMsg]) for use with 
+This crate provides reusable error messages (`PanicMsg`) for use with 
 panics, assertions (`assert`, `assert_eq`, `assert_ne`), and `expect`.
 It also includes debug versions of each of these methods.
 
-Simply declare a [PanicMsg]:
+Simply declare a `PanicMsg`:
 ```rust, no_run
 const EXAMPLE_PANIC: PanicMsg = PanicMsg::new("This is an example panic message.");
 ```

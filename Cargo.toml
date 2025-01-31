@@ -1,6 +1,6 @@
 [package]
 name = "panicmsg"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 description = "A library for simplyifying common panic messages."
 repository = "https://github.com/ErisianArchitect/panicmsg"

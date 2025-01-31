@@ -8,7 +8,6 @@
 //! ```
 //! Then use it like this:
 //! ```rust, no_run
-// ...
 //! EXAMPLE_PANIC.panic();
 //! // ...
 //! EXAMPLE_PANIC.panic_if(left >= right);
@@ -222,6 +221,18 @@ impl<M: std::fmt::Display> PanicMsg<M> {
 }
 
 // Trait implementations.
+
+impl<M: std::fmt::Display> std::fmt::Display for PanicMsg<M> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.message)
+    }
+}
+
+impl<M: std::fmt::Debug + std::fmt::Display> std::fmt::Debug for PanicMsg<M> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self.message)
+    }
+}
 
 impl<M: std::fmt::Display + Clone> Clone for PanicMsg<M> {
     fn clone(&self) -> Self {

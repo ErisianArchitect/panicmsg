@@ -1,6 +1,6 @@
 This crate provides reusable error messages (`PanicMsg`) for use with 
 panics, assertions (`assert`, `assert_eq`, `assert_ne`), and `expect`.
-It also includes debug versions of each of these methods.
+It also includes debug versions of each of these methods (besides expect).
 
 Simply declare a `PanicMsg`:
 ```rust, no_run

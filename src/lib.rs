@@ -19,9 +19,9 @@
 //! // ...
 //! EXAMPLE_PANIC.assert_ne(left, right);
 //! // ...
-//! EXAMPLE_PANIC.expect_opt(option_value);
+//! EXAMPLE_PANIC.expect(option);
 //! // ...
-//! EXAMPLE_PANIC.expect_result(result);
+//! EXAMPLE_PANIC.expect(result);
 //! // ...
 //! EXAMPLE_PANIC.debug_panic();
 //! // ...
@@ -33,10 +33,36 @@
 //! // ...
 //! EXAMPLE_PANIC.debug_assert_ne(left, right);
 //! // ...
-//! EXAMPLE_PANIC.debug_expect_opt(option_value);
+//! EXAMPLE_PANIC.debug_expect(option);
 //! // ...
-//! EXAMPLE_PANIC.debug_expect_result(result);
+//! EXAMPLE_PANIC.debug_expect(result);
 //! ```
+
+mod private {
+    pub trait Sealed {}
+    impl<T> Sealed for Option<T> {}
+    impl<T, E> Sealed for Result<T, E> {}
+}
+
+/// Used to convert [Result] into [Option], or keep [Option] as it is.
+pub trait IntoOption: private::Sealed {
+    type OptionT;
+    fn into_option(self) -> Option<Self::OptionT>;
+}
+
+impl<T> IntoOption for Option<T> {
+    type OptionT = T;
+    fn into_option(self) -> Option<Self::OptionT> {
+        self
+    }
+}
+
+impl<T, E> IntoOption for Result<T, E> {
+    type OptionT = T;
+    fn into_option(self) -> Option<Self::OptionT> {
+        self.ok()
+    }
+}
 
 /// A compile-time initialized panic message that can be reused with specific error messages
 /// for panics, allowing for consistent and reusable error reporting.
@@ -55,9 +81,9 @@
 /// // ...
 /// EXAMPLE_PANIC.assert_ne(left, right);
 /// // ...
-/// EXAMPLE_PANIC.expect_opt(option_value);
+/// EXAMPLE_PANIC.expect(option);
 /// // ...
-/// EXAMPLE_PANIC.expect_result(result);
+/// EXAMPLE_PANIC.expect(result);
 /// ```
 /// There are also `debug` variants of each of these methods.
 pub struct PanicMsg<M: std::fmt::Display = &'static str> {
@@ -72,6 +98,7 @@ impl<M: std::fmt::Display> PanicMsg<M> {
     /// Panic at runtime.
     /// 
     /// See [panic].
+    #[cold]
     #[track_caller]
     pub fn panic(&self) -> ! {
         panic!("{}", self.message);
@@ -124,6 +151,7 @@ impl<M: std::fmt::Display> PanicMsg<M> {
     /// Panic at runtime with `debug_assertions`.
     /// 
     /// See [panic].
+    #[cold]
     #[track_caller]
     pub fn debug_panic(&self) {
         if cfg!(debug_assertions) {
@@ -178,20 +206,10 @@ impl<M: std::fmt::Display> PanicMsg<M> {
         debug_assert_ne!(lhs, rhs, "{}", self.message);
     }
 
-    /// Returns the contained [Some] value, consuming the `self` value
     #[track_caller]
-    pub fn expect_opt<T>(&self, value: Option<T>) -> T {
-        let Some(value) = value else {
-            panic!("(Expect failed): {}", self.message);
-        };
-        value
-    }
-
-    /// Returns the contained [Ok] value, consuming the `self` value.
-    #[track_caller]
-    pub fn expect_result<T, E>(&self, value: Result<T, E>) -> T {
-        let Ok(value) = value else {
-            panic!("(Expect failed): {}", self.message);
+    pub fn expect<T: IntoOption>(&self, value: T) -> T::OptionT {
+        let Some(value) = value.into_option() else {
+            panic!("{}", self.message);
         };
         value
     }
@@ -295,13 +313,21 @@ macro_rules! const_panic_msg {
 #[cfg(test)]
 mod tests {
     #![allow(unused)]
+    use super::PanicMsg;
     const_panic_msg!(TEST_PANIC = "Test panic.");
-    use super::*;
 
     #[should_panic]
     #[test]
     fn panic_test() {
-
         TEST_PANIC.panic();
+    }
+
+    #[should_panic]
+    #[test]
+    fn expect_test() {
+        let some: Option<()> = None;
+        let result: Result<(), ()> = Err(());
+        // let num = TEST_PANIC.expect(some);
+        let string = TEST_PANIC.expect(result);
     }
 }

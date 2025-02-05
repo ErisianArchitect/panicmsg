@@ -63,8 +63,7 @@ impl<T, E> IntoOption for Result<T, E> {
     }
 }
 
-/// A panic message that can be reused with specific error messages
-/// for panics, allowing for consistent and reusable error reporting.
+/// A panic message for runtime panics.
 /// 
 /// # Example
 /// ```rust, no_run
@@ -83,13 +82,27 @@ impl<T, E> IntoOption for Result<T, E> {
 /// EXAMPLE_PANIC.expect(option);
 /// // ...
 /// EXAMPLE_PANIC.expect(result);
+/// // ...
+/// EXAMPLE_PANIC.debug_panic();
+/// // ...
+/// EXAMPLE_PANIC.debug_panic_if(left >= right);
+/// // ...
+/// EXAMPLE_PANIC.debug_assert(left < right);
+/// // ...
+/// EXAMPLE_PANIC.debug_assert_eq(left, right);
+/// // ...
+/// EXAMPLE_PANIC.debug_assert_ne(left, right);
+/// // ...
+/// EXAMPLE_PANIC.debug_expect(option);
+/// // ...
+/// EXAMPLE_PANIC.debug_expect(result);
 /// ```
-/// There are also `debug` variants of each of these methods.
 pub struct PanicMsg<M: std::fmt::Display = &'static str> {
     message: M,
 }
 
 impl<M: std::fmt::Display> PanicMsg<M> {
+    /// Create a new [PanicMsg].
     pub const fn new(message: M) -> Self {
         Self { message }
     }

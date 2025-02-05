@@ -159,7 +159,8 @@ impl<M: std::fmt::Display> PanicMsg<M> {
     #[cold]
     #[track_caller]
     pub fn debug_panic(&self) {
-        if cfg!(debug_assertions) {
+        #[cfg(debug_assertions)]
+        {
             panic!("{}", self.message);
         }
     }

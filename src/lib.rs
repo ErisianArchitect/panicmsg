@@ -63,7 +63,8 @@ impl<T, E> IntoOption for Result<T, E> {
     }
 }
 
-/// A panic message for runtime panics.
+/// A message for runtime panics. When one of the methods is called on it, the given message
+/// is used as the output for the panic.
 /// 
 /// # Example
 /// ```rust, no_run

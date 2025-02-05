@@ -31,10 +31,6 @@
 //! EXAMPLE_PANIC.debug_assert_eq(left, right);
 //! // ...
 //! EXAMPLE_PANIC.debug_assert_ne(left, right);
-//! // ...
-//! EXAMPLE_PANIC.debug_expect(option);
-//! // ...
-//! EXAMPLE_PANIC.debug_expect(result);
 //! ```
 
 mod private {
@@ -93,10 +89,6 @@ impl<T, E> IntoOption for Result<T, E> {
 /// EXAMPLE_PANIC.debug_assert_eq(left, right);
 /// // ...
 /// EXAMPLE_PANIC.debug_assert_ne(left, right);
-/// // ...
-/// EXAMPLE_PANIC.debug_expect(option);
-/// // ...
-/// EXAMPLE_PANIC.debug_expect(result);
 /// ```
 pub struct PanicMsg<M: std::fmt::Display = &'static str> {
     message: M,

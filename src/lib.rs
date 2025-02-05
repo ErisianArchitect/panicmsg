@@ -63,7 +63,7 @@ impl<T, E> IntoOption for Result<T, E> {
     }
 }
 
-/// A compile-time initialized panic message that can be reused with specific error messages
+/// A panic message that can be reused with specific error messages
 /// for panics, allowing for consistent and reusable error reporting.
 /// 
 /// # Example

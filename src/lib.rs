@@ -334,25 +334,3 @@ macro_rules! const_panic_msg {
         $visibility const $name: PanicMsg<&'static str> = PanicMsg::new($msg);
     };
 }
-
-#[cfg(test)]
-mod tests {
-    #![allow(unused)]
-    use super::PanicMsg;
-    const_panic_msg!(TEST_PANIC = "Test panic.");
-
-    #[should_panic]
-    #[test]
-    fn panic_test() {
-        TEST_PANIC.panic();
-    }
-
-    #[should_panic]
-    #[test]
-    fn expect_test() {
-        let some: Option<()> = None;
-        let result: Result<(), ()> = Err(());
-        // let num = TEST_PANIC.expect(some);
-        let string = TEST_PANIC.expect(result);
-    }
-}

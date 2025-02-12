@@ -364,9 +364,23 @@ impl<I, F: Fn(I) -> bool, M: std::fmt::Display> Assertion<I, F, M> {
         assert!((self.function)(input), "{}", self.message);
     }
 
+    /// Assert the function with the given `input`, displaying the given `msg` if
+    /// the assertion fails.
+    #[track_caller]
+    pub fn assert_with<Msg: std::fmt::Display>(&self, input: I, msg: Msg) {
+        assert!((self.function)(input), "{}", msg);
+    }
+
     /// Assert the function with the given `input` in dev.
     #[track_caller]
     pub fn debug_assert(&self, input: I) {
         debug_assert!((self.function)(input), "{}", self.message);
+    }
+
+    /// Assert the function with the given `input` in dev, displaying the given
+    /// `msg` if the assertion fails.
+    #[track_caller]
+    pub fn debug_assert_with<Msg: std::fmt::Display>(&self, input: I, msg: Msg) {
+        debug_assert!((self.function)(input), "{}", msg);
     }
 }

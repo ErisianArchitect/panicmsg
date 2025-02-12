@@ -327,3 +327,29 @@ macro_rules! const_panic_msg {
         $visibility const $name: PanicMsg<&'static str> = PanicMsg::new($msg);
     };
 }
+
+pub struct Assertion<I, F: Fn(I) -> bool = fn(I) -> bool, M: std::fmt::Display = &'static str> {
+    function: F,
+    msg: M,
+    _phantom: std::marker::PhantomData<I>,
+}
+
+impl<I, F: Fn(I) -> bool, M: std::fmt::Display> Assertion<I, F, M> {
+    pub const fn new(msg: M, function: F) -> Self {
+        Self {
+            msg,
+            function,
+            _phantom: std::marker::PhantomData,
+        }
+    }
+
+    #[track_caller]
+    pub fn assert(&self, input: I) {
+        assert!((self.function)(input), "{}", self.msg);
+    }
+
+    #[track_caller]
+    pub fn debug_assert(&self, input: I) {
+        debug_assert!((self.function)(input), "{}", self.msg);
+    }
+}

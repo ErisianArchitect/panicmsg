@@ -221,7 +221,7 @@ impl<M: std::fmt::Display> PanicMsg<M> {
     }
 
     /// Resturn a reference to the contained message.
-    pub fn msg(&self) -> &M {
+    pub const fn msg(&self) -> &M {
         &self.message
     }
 

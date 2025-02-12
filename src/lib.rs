@@ -168,6 +168,7 @@ impl<M: std::fmt::Display> PanicMsg<M> {
     /// Panic if the condition is `true` at runtime with `debug_assertions`.
     /// 
     /// See [panic].
+    #[allow(unused)] // needs allow(unused so it doesn't give a warning in release mode.)
     #[track_caller]
     pub fn debug_panic_if(&self, condition: bool) {
         #[cfg(debug_assertions)]

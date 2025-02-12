@@ -328,28 +328,44 @@ macro_rules! const_panic_msg {
     };
 }
 
+/// An assert function with a message for runtime assertions.
+/// 
+/// # Example
+/// ```rust, no_run
+/// let asserter = Assertion::new("lhs is not equal to rhs.", |(lhs, rhs)| lhs == rhs);
+/// asserter.assert((4, 4));
+/// // Will panic here.
+/// asserter.assert((4, 5));
+/// 
+/// asserter.debug_assert((4, 4));
+/// // Will panic here in dev.
+/// asserter.debug_assert((4, 5));
+/// ```
 pub struct Assertion<I, F: Fn(I) -> bool = fn(I) -> bool, M: std::fmt::Display = &'static str> {
     function: F,
-    msg: M,
+    message: M,
     _phantom: std::marker::PhantomData<I>,
 }
 
 impl<I, F: Fn(I) -> bool, M: std::fmt::Display> Assertion<I, F, M> {
-    pub const fn new(msg: M, function: F) -> Self {
+    /// Create a new [Assertion] with the provided `message` that calls the provided `function`.
+    pub const fn new(message: M, function: F) -> Self {
         Self {
-            msg,
+            message,
             function,
             _phantom: std::marker::PhantomData,
         }
     }
 
+    /// Assert the function with the given `input`.
     #[track_caller]
     pub fn assert(&self, input: I) {
-        assert!((self.function)(input), "{}", self.msg);
+        assert!((self.function)(input), "{}", self.message);
     }
 
+    /// Assert the function with the given `input` in dev.
     #[track_caller]
     pub fn debug_assert(&self, input: I) {
-        debug_assert!((self.function)(input), "{}", self.msg);
+        debug_assert!((self.function)(input), "{}", self.message);
     }
 }

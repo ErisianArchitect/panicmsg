@@ -311,6 +311,56 @@ impl<M: std::fmt::Display + std::hash::Hash> std::hash::Hash for PanicMsg<M> {
     }
 }
 
+impl<M: std::fmt::Display> std::ops::Deref for PanicMsg<M> {
+    type Target = M;
+
+    fn deref(&self) -> &Self::Target {
+        &self.message
+    }
+}
+
+impl<M: std::fmt::Display> std::ops::DerefMut for PanicMsg<M> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.message
+    }
+}
+
+impl<M: std::fmt::Display> AsRef<PanicMsg<M>> for PanicMsg<M> {
+    fn as_ref(&self) -> &PanicMsg<M> {
+        self
+    }
+}
+
+impl<M: std::fmt::Display> AsMut<PanicMsg<M>> for PanicMsg<M> {
+    fn as_mut(&mut self) -> &mut PanicMsg<M> {
+        self
+    }
+}
+
+impl<M: std::fmt::Display> AsRef<M> for PanicMsg<M> {
+    fn as_ref(&self) -> &M {
+        &self.message
+    }
+}
+
+impl<M: std::fmt::Display> AsMut<M> for PanicMsg<M> {
+    fn as_mut(&mut self) -> &mut M {
+        &mut self.message
+    }
+}
+
+impl<M: std::fmt::Display> std::borrow::Borrow<M> for PanicMsg<M> {
+    fn borrow(&self) -> &M {
+        &self.message
+    }
+}
+
+impl<M: std::fmt::Display> std::borrow::BorrowMut<M> for PanicMsg<M> {
+    fn borrow_mut(&mut self) -> &mut M {
+        &mut self.message
+    }
+}
+
 /// Declare a const [PanicMsg] with an `&'static str` message.
 /// 
 /// # Example

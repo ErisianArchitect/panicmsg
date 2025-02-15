@@ -375,7 +375,7 @@ impl<M: std::fmt::Display> std::borrow::BorrowMut<M> for PanicMsg<M> {
 #[macro_export]
 macro_rules! const_panic_msg {
     ($visibility:vis $name:ident = $msg:literal) => {
-        $visibility const $name: PanicMsg<&'static str> = PanicMsg::new($msg);
+        $visibility const $name: $crate::PanicMsg<&'static str> = $crate::PanicMsg::new($msg);
     };
 }
 

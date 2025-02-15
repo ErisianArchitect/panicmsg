@@ -377,6 +377,13 @@ macro_rules! const_panic_msg {
     ($visibility:vis $name:ident = $msg:literal) => {
         $visibility const $name: $crate::PanicMsg<&'static str> = $crate::PanicMsg::new($msg);
     };
+    ($(
+        $visibility:vis $name:ident = $msg:literal;
+    )+) => {
+        $(
+            $visibility const $name: $crate::PanicMsg<&'static str> = $crate::PanicMsg::new($msg);
+        )*
+    };
 }
 
 /// An assert function with a message for runtime assertions.
